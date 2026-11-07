@@ -1,5 +1,7 @@
 # Soheil Router
 
+[![mcptry](https://mcptry.com/badge/fi.soheil/router)](https://mcptry.com/servers/fi.soheil/router)
+
 **One API call for the best token swap price, and one transaction that makes it.**
 Soheil Router compares prices across DEXes and aggregators on each network and executes the trade through its own
 contract: non-upgradeable, source verified on the explorers, and it holds no funds between trades.
