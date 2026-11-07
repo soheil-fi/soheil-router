@@ -4,11 +4,20 @@
   "title": "Soheil Router",
   "description": "Best-price token swaps on EVM networks through a non-custodial contract: quotes and trade status.",
   "websiteUrl": "https://soheil.fi/developers/",
+  "icons": [
+    {
+      "src": "https://soheil.fi/brand/router-icon.svg",
+      "mimeType": "image/svg+xml",
+      "sizes": [
+        "any"
+      ]
+    }
+  ],
   "repository": {
     "url": "https://github.com/soheil-fi/soheil-router",
     "source": "github"
   },
-  "version": "1.0.0",
+  "version": "1.0.1",
   "remotes": [
     {
       "type": "streamable-http",
