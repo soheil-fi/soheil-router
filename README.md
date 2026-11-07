@@ -40,7 +40,7 @@ const quote = await router.getQuote({
 
 // quote.approvalAddress → approve exactly quote.fromAmount first (null when selling the coin)
 // quote.transactionRequest → have the user's wallet send it unchanged
-const status = await router.waitForTrade(8453, txHash);     // DONE, FAILED or NOT_OURS
+const status = await router.waitForTrade(8453, txHash);     // DONE, REFUNDED, FAILED or NOT_OURS
 ```
 
 A whole swap with viem is in [`examples/swap-viem.ts`](examples/swap-viem.ts).
@@ -50,11 +50,32 @@ A whole swap with viem is in [`examples/swap-viem.ts`](examples/swap-viem.ts).
 | `getNetworks()` | no | Live networks, our contract and the contracts a trade may call |
 | `getInfo()` | no | Fee, limits, docs |
 | `getQuote(request)` | yes | Price, minimum received, fees, approval address, transaction |
-| `getStatus(chainId, txHash)` | yes | `PENDING`, `DONE`, `FAILED`, `NOT_OURS` or `NOT_FOUND` |
+| `getStatus(chainId, txHash)` | yes | `PENDING`, `DONE`, `REFUNDED`, `FAILED`, `NOT_OURS` or `NOT_FOUND` |
 | `waitForTrade(chainId, txHash)` | yes | `getStatus` until the trade is final |
 
 Errors are thrown as `SoheilRouterError` with `code` (`NO_ROUTE`, `RATE_LIMITED`, `UNAUTHORIZED`…), the HTTP `status`
 and a `message` safe to show your users.
+
+## Bridge to another network
+
+Set `toChainId` to another of the router's networks. The answer has `type: "bridge"`, and the user still signs one
+transaction on the source network; the recipient is paid on the destination within seconds.
+
+```ts
+const quote = await router.getQuote({
+  fromChainId: 8453,                                       // from Base
+  toChainId: 42161,                                        // to Arbitrum
+  fromToken: "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913", // USDC on Base
+  toToken: "0xaf88d065e77c8cC2239327C5EDb3A432268e5831",   // USDC on Arbitrum
+  fromAmount: 100_000_000n,                                // 100 USDC
+  fromAddress: "0xUserWallet",
+});
+// quote.toAmount is exactly what arrives; a transfer nobody fills is refunded to fromAddress on Base
+const status = await router.waitForTrade(8453, txHash);     // DONE (status.receiving = the payout) or REFUNDED
+```
+
+`toToken` is an asset the bridge carries (USDC, USDT, ETH…); `fromToken` can be any token: when it differs, our contract
+swaps it first on the source network, in the same transaction. Docs: https://soheil.fi/developers/docs/bridging/
 
 ## Use it from an AI assistant (MCP)
 

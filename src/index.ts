@@ -33,7 +33,7 @@ export interface Info {
 /** What to swap. Amounts are integer strings in the token's smallest unit; the coin is 0x000…0. */
 export interface QuoteRequest {
   fromChainId: number;
-  /** Same as fromChainId for now; defaults to it. */
+  /** Where the recipient receives: fromChainId for a swap (the default), or another of the router's networks to bridge there. */
   toChainId?: number;
   fromToken: string;
   toToken: string;
@@ -106,7 +106,10 @@ export interface Trade {
   integratorAddress: string | null;
 }
 
-/** PENDING, DONE, FAILED, NOT_OURS or NOT_FOUND; more may come (treat an unknown one as PENDING). */
+/**
+ * PENDING, DONE, REFUNDED (a bridge transfer paid back on the source network), FAILED, NOT_OURS or NOT_FOUND; more may
+ * come (treat an unknown one as PENDING). For a bridge transfer, receiving is the payout on the destination.
+ */
 export interface Status {
   status: string;
   substatus: string | null;
@@ -132,7 +135,7 @@ export interface Options {
 }
 
 /** The final statuses of a trade. */
-const FINAL = new Set(["DONE", "FAILED", "NOT_OURS"]);
+const FINAL = new Set(["DONE", "REFUNDED", "FAILED", "NOT_OURS"]);
 
 export class SoheilRouter {
   private readonly apiKey?: string;
