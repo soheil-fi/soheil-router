@@ -74,8 +74,9 @@ const quote = await router.getQuote({
 const status = await router.waitForTrade(8453, txHash);     // DONE (status.receiving = the payout) or REFUNDED
 ```
 
-`toToken` is an asset the bridge carries (USDC, USDT, ETH…); `fromToken` can be any token: when it differs, our contract
-swaps it first on the source network, in the same transaction. Docs: https://soheil.fi/developers/docs/bridging/
+`fromToken` and `toToken` can be any token: what the bridge does not carry is swapped first on the source network, or
+bought on arrival on the destination (then `toAmountMin` is that swap's least; if the price moves past it, the recipient
+gets the bridged token, like USDC, instead). Still one transaction, fees taken once. Docs: https://soheil.fi/developers/docs/bridging/
 
 ## Use it from an AI assistant (MCP)
 
