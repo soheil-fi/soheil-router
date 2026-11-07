@@ -70,7 +70,7 @@ const quote = await router.getQuote({
   fromAmount: 100_000_000n,                                // 100 USDC
   fromAddress: "0xUserWallet",
 });
-// quote.toAmount is exactly what arrives; a transfer nobody fills is refunded to fromAddress on Base
+// quote.toAmount is what arrives; a transfer nobody fills is refunded to fromAddress on Base (status REFUND_PENDING until then)
 const status = await router.waitForTrade(8453, txHash);     // DONE (status.receiving = the payout) or REFUNDED
 ```
 
