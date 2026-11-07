@@ -2,9 +2,12 @@
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
   "name": "fi.soheil/router",
   "title": "Soheil Router",
-  "description": "Best-price token swaps on EVM networks through a non-custodial contract: quotes with the transaction to sign, and trade status.",
+  "description": "Best-price token swaps on EVM networks through a non-custodial contract: quotes and trade status.",
   "websiteUrl": "https://soheil.fi/developers/",
-  "repository": { "url": "https://github.com/soheil-fi/soheil-router", "source": "github" },
+  "repository": {
+    "url": "https://github.com/soheil-fi/soheil-router",
+    "source": "github"
+  },
   "version": "1.0.0",
   "remotes": [
     {
