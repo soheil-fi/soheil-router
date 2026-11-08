@@ -11,6 +11,21 @@ contract: non-upgradeable, source verified on the explorers, and it holds no fun
 - **OpenAPI 3.1:** https://api.soheil.fi/v1/openapi.json
 - **For AI assistants:** https://soheil.fi/developers/llms-full.txt · MCP server at `https://api.soheil.fi/v1/mcp`
 
+## Networks
+
+Live on 18 EVM networks, including **BNB Chain (BNB Smart Chain, BSC)**, Ethereum, Base, Arbitrum, OP Mainnet, Polygon,
+Avalanche, HyperEVM, Unichain, Linea, Sonic, Mantle, Berachain, Monad, Gnosis, Ink, World Chain and Scroll.
+`getNetworks()` (or `GET https://api.soheil.fi/v1/chains`) lists them with the contract on each.
+
+| Network | Chain ID | Soheil Router contract |
+|---|---|---|
+| BNB Smart Chain (BSC) | 56 | [`0x54EbB98508978fdF2464345f21594162617CDFa1`](https://bscscan.com/address/0x54EbB98508978fdF2464345f21594162617CDFa1) |
+| Base | 8453 | `0x7E959A3094dA1712B4EaaBa9B7857a4738fdd4fa` |
+| Every other network | | `0x54EbB98508978fdF2464345f21594162617CDFa1` |
+
+On BNB Chain the router trades through PancakeSwap, Uniswap, SushiSwap and the major aggregators, and bridges BSC to the
+other networks.
+
 ## Fees
 
 0.1% (10 bps) to the router on each swap. You can add your own fee (up to 0.9%), paid to your wallet inside the same
