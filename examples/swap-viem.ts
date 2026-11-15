@@ -35,7 +35,7 @@ if (quote.approvalAddress) {
 }
 
 // 3. Send the transaction unchanged
-const tx = quote.transactionRequest;
+const tx = quote.transactionRequest!; // set for a trade that starts on an EVM network
 const hash = await wallet.sendTransaction({ to: tx.to as `0x${string}`, data: tx.data as `0x${string}`, value: BigInt(tx.value) });
 console.log("sent", hash);
 

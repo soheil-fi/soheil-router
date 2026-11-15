@@ -1,7 +1,7 @@
 {
   "name": "@soheil-fi/router",
-  "version": "0.2.0",
-  "description": "Soheil Router API client: the best token swap price on BNB Chain (BSC), Ethereum, Base and 15 more EVM networks, and the one transaction that makes it, through a non-custodial contract.",
+  "version": "0.3.0",
+  "description": "Soheil Router API client: the best token swap and bridge price on BNB Chain (BSC), Ethereum, Base and 20+ more EVM networks, Solana, Bitcoin, TON, Tron, Sui and Cosmos, and the one transaction that makes it. Non-custodial.",
   "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -39,7 +39,14 @@
     "bnb",
     "bnb-chain",
     "bsc",
-    "bnb-smart-chain"
+    "bnb-smart-chain",
+    "bridge",
+    "solana",
+    "tron",
+    "cosmos",
+    "sui",
+    "ton",
+    "bitcoin"
   ],
   "homepage": "https://soheil.fi/developers/",
   "repository": {

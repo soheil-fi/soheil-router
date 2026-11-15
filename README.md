@@ -2,9 +2,10 @@
 
 [![mcptry](https://mcptry.com/badge/fi.soheil/router)](https://mcptry.com/servers/fi.soheil/router)
 
-**One API call for the best token swap price, and one transaction that makes it.**
-Soheil Router compares prices across DEXes and aggregators on each network and executes the trade through its own
-contract: non-upgradeable, source verified on the explorers, and it holds no funds between trades.
+**One API call for the best token swap or bridge price, and one transaction that makes it.**
+Soheil Router compares prices across DEXes, aggregators and bridges and executes the trade through its own contract:
+non-upgradeable, source verified on the explorers, and it holds no funds between trades. The same API also serves
+Solana, Bitcoin, TON, Tron, Sui and Cosmos networks, where no contract is needed.
 
 - **Docs:** https://soheil.fi/developers/docs/
 - **Free API key:** https://soheil.fi/developers/dashboard/
@@ -13,9 +14,14 @@ contract: non-upgradeable, source verified on the explorers, and it holds no fun
 
 ## Networks
 
-Live on 18 EVM networks, including **BNB Chain (BNB Smart Chain, BSC)**, Ethereum, Base, Arbitrum, OP Mainnet, Polygon,
-Avalanche, HyperEVM, Unichain, Linea, Sonic, Mantle, Berachain, Monad, Gnosis, Ink, World Chain and Scroll.
-`getNetworks()` (or `GET https://api.soheil.fi/v1/chains`) lists them with the contract on each.
+The contract is live on 25+ EVM networks, including **BNB Chain (BNB Smart Chain, BSC)**, Ethereum, Base, Arbitrum,
+OP Mainnet, Polygon, Avalanche, HyperEVM, Unichain, Linea, Sonic, Mantle, Berachain, Monad, Gnosis, Ink, World Chain,
+Scroll, Plasma, X Layer, Soneium, Celo and Zora. `getNetworks()` (or `GET https://api.soheil.fi/v1/chains`) is always the
+current list, with the contract on each.
+
+Solana, Bitcoin, TON, Tron, Sui, Hyperliquid and Cosmos networks (Osmosis, Cosmos Hub, Noble and more) are served
+without a contract: `getOtherNetworks()` (or `GET https://api.soheil.fi/v1/networks`) lists them, each saying whether
+trades can start there, be paid out there, or swap there. See [Other networks](#other-networks).
 
 | Network | Chain ID | Soheil Router contract |
 |---|---|---|
@@ -28,8 +34,8 @@ other networks.
 
 ## Fees
 
-0.1% (10 bps) to the router on each swap. You can add your own fee (up to 0.9%), paid to your wallet inside the same
-transaction: nothing to claim.
+0.1% (10 bps) to the router on each trade. Through the contract you can add your own fee (up to 0.9%), paid to your
+wallet inside the same transaction: nothing to claim.
 
 ## Install
 
@@ -62,11 +68,14 @@ A whole swap with viem is in [`examples/swap-viem.ts`](examples/swap-viem.ts).
 
 | Method | Key | Returns |
 | --- | --- | --- |
-| `getNetworks()` | no | Live networks, our contract and the contracts a trade may call |
+| `getNetworks()` | no | Live EVM networks, our contract and the contracts a trade may call |
+| `getOtherNetworks()` | no | Solana, Bitcoin, TON, Tron, Sui, Hyperliquid, Cosmos and deposit networks, and what each can do |
 | `getInfo()` | no | Fee, limits, docs |
 | `getQuote(request)` | yes | Price, minimum received, fees, approval address, transaction |
 | `getStatus(chainId, txHash)` | yes | `PENDING`, `DONE`, `REFUNDED`, `FAILED`, `NOT_OURS` or `NOT_FOUND` |
-| `waitForTrade(chainId, txHash)` | yes | `getStatus` until the trade is final |
+| `getStatus(chainId, { id, txHash })` | yes | The same, for a trade followed by its quote's id (see below) |
+| `waitForTrade(chainId, trade)` | yes | `getStatus` until the trade is final |
+| `sendSolana(chainId, transaction)` | yes | Sends a signed Solana transaction of a quote |
 
 Errors are thrown as `SoheilRouterError` with `code` (`NO_ROUTE`, `RATE_LIMITED`, `UNAUTHORIZED`…), the HTTP `status`
 and a `message` safe to show your users.
@@ -92,6 +101,38 @@ const status = await router.waitForTrade(8453, txHash);     // DONE (status.rece
 `fromToken` and `toToken` can be any token: what the bridge does not carry is swapped first on the source network, or
 bought on arrival on the destination (then `toAmountMin` is that swap's least; if the price moves past it, the recipient
 gets the bridged token, like USDC, instead). Still one transaction, fees taken once. Docs: https://soheil.fi/developers/docs/bridging/
+
+## Other networks
+
+The request is the same everywhere; what the quote carries for the sender depends on where the trade starts.
+
+| Trade starts on | The quote carries | Follow it with |
+| --- | --- | --- |
+| An EVM network | `transactionRequest` (after approving `approvalAddress`) | `getStatus(chainId, txHash)` |
+| Solana | `transaction`: unsigned, base64; sign and send it (or `sendSolana`) | `getStatus(chainId, signature)` |
+| Bitcoin, Sui, a token on TON, and the deposit networks (XRP, Dogecoin, Zcash…) | `deposit`: an address to pay exactly `fromAmount` to, with a `memo` where needed | `getStatus(chainId, { id: quote.id })` |
+| TON (the coin) | `messages` for TON Connect's `sendTransaction` | `getStatus(chainId, { id: quote.id })` |
+| Tron | `tron`: a contract call for TronLink, after approving `approvalAddress`; `tron.fee` (when set) is sent first, and `tron.networkCost` is the TRX it will burn | `getStatus(chainId, { id: quote.id, txHash })` |
+| A Cosmos network | `cosmos`: the messages of one transaction for Keplr or Leap; the router's fee is the last one | `getStatus(chainId, { id: quote.id, txHash })` |
+
+```ts
+const others = await router.getOtherNetworks();
+const tron = others.find((n) => n.type === "tron")!;
+
+const quote = await router.getQuote({
+  fromChainId: tron.chainId,                               // a swap on Tron
+  fromToken: tron.nativeToken,                             // TRX
+  toToken: "TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t",           // USDT
+  fromAmount: 10_000_000n,                                 // 10 TRX, in sun
+  fromAddress: "TUserWallet",
+});
+// quote.tron.networkCost → the TRX the wallet must hold on top; quote.tron.fee → send it first, then the call
+const status = await router.waitForTrade(tron.chainId, { id: quote.id, txHash });
+```
+
+Tokens and addresses on these networks are written as the network writes them (a Solana mint, a Tron `T…` address, a
+Cosmos denom like `uatom`); `toAddress` is required whenever the recipient is on another kind of network. Each page of
+the docs has a full example: https://soheil.fi/developers/docs/networks/
 
 ## Use it from an AI assistant (MCP)
 
