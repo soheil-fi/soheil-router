@@ -136,8 +136,23 @@ the docs has a full example: https://soheil.fi/developers/docs/networks/
 
 ## Use it from an AI assistant (MCP)
 
-The API is also an MCP server (Streamable HTTP) with the tools `get_networks`, `get_api_info`, `get_quote` and
-`get_trade_status`.
+The API is also an MCP server (Streamable HTTP) at `https://api.soheil.fi/v1/mcp`. **No key needed**: quotes and trade
+status work at a low shared rate, on every network the router serves. The server returns what to sign; the user, or an
+agent with a wallet of its own, signs.
+
+| Tool | What it does |
+| --- | --- |
+| `get_networks` | Where the router trades, EVM and the other networks, and what each can do |
+| `get_api_info` | Fee, limits, docs |
+| `get_quote` | The best price for a swap or bridge, and what the sender signs |
+| `get_signing_guide` | The exact steps to sign and send a quote on its network, and how to follow it |
+| `get_trade_status` | Where a sent trade stands, by its transaction, its quote's id, or both |
+
+```bash
+claude mcp add --transport http soheil-router https://api.soheil.fi/v1/mcp
+```
+
+With your own key you get your own limits and can add your fee:
 
 ```bash
 claude mcp add --transport http soheil-router https://api.soheil.fi/v1/mcp \
