@@ -75,6 +75,11 @@ export interface QuoteRequest {
   slippageBps?: number;
   /** Your own fee in basis points, paid to your key's fee address inside the trade. */
   integratorBps?: number;
+  /**
+   * Set true when you only show this price and will ask again before anyone signs (a list of routes, a preview). Partners
+   * that limit quotes which are never traded are then left out, so the quote you ask for to sign can only be as good or better.
+   */
+  priceOnly?: boolean;
 }
 
 export interface Fees {
