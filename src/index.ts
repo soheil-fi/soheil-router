@@ -41,6 +41,11 @@ export interface OtherNetwork {
   feeCollector: string | null;
   /** The tokens it takes, as written, where it takes only a few; null where any token works or its one token is nativeToken. */
   tokens: string[] | null;
+  /**
+   * Whether a trade that starts here can carry your integratorBps (paid by the bridge to your key's EVM fee address and
+   * claimed there). On Tron: its transfers, not its swaps. Not yet on Solana or the Cosmos networks.
+   */
+  integratorFee: boolean;
 }
 
 /** GET /v1/info. */
@@ -153,8 +158,8 @@ export interface CosmosMessage {
 
 /**
  * What the recipient gets, the fees, and what the sender signs. Which field carries that depends on where the trade
- * starts: transactionRequest (EVM), transaction (Solana), messages (TON), tron (Tron), cosmos (a Cosmos network), or
- * deposit (Bitcoin, Sui and the networks paid by deposit: nothing to sign, an address to pay).
+ * starts: transactionRequest (EVM), transaction (Solana; Sui's USDC to USDC), messages (TON), tron (Tron), cosmos (a
+ * Cosmos network), or deposit (Bitcoin, Sui and the networks paid by deposit: nothing to sign, an address to pay).
  */
 export interface Quote {
   id: string;
@@ -176,7 +181,11 @@ export interface Quote {
   /** Unix seconds after which the quote should be asked again. */
   validUntil: number;
   estimatedDurationSeconds: number;
-  /** From Solana: the unsigned transaction, base64, good until the chain passes lastValidBlockHeight. */
+  /**
+   * From Solana: the unsigned transaction, base64, good until the chain passes lastValidBlockHeight. From Sui (USDC to
+   * USDC): the transaction as JSON for Transaction.from in Sui's SDK; the wallet adds the gas, signs and sends it. Follow
+   * it with getStatus(chainId, { id: quote.id, txHash: digest }).
+   */
   transaction?: string | null;
   lastValidBlockHeight?: number | null;
   /** Paid by deposit: where to send exactly fromAmount. Follow it with getStatus(chainId, { id: quote.id }). */
