@@ -76,7 +76,10 @@ export interface QuoteRequest {
   fromAddress: string;
   /** Where the tokens go; defaults to fromAddress. Required when the recipient is on another kind of network. */
   toAddress?: string;
-  /** Max price move in basis points (1 to 5000, default 50). */
+  /**
+   * Max price move in basis points (1 to 5000, default 50). A cross-chain route whose own swaps need more room may use
+   * up to 300 (3%); toAmountMin always shows the least that arrives.
+   */
   slippageBps?: number;
   /** Your own fee in basis points, paid to your key's fee address inside the trade. */
   integratorBps?: number;

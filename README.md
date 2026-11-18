@@ -7,7 +7,7 @@ Soheil Router compares prices across DEXes, aggregators and bridges and executes
 non-upgradeable, source verified on the explorers, and it holds no funds between trades. The same API also serves
 Solana, Bitcoin, TON, Tron, Sui and Cosmos networks, where no contract is needed.
 
-- **Docs:** https://soheil.fi/developers/docs/
+- **Docs:** https://soheil.fi/developers/docs/ (also in this repository: [docs/](docs/))
 - **Free API key:** https://soheil.fi/developers/dashboard/
 - **OpenAPI 3.1:** https://api.soheil.fi/v1/openapi.json
 - **For AI assistants:** https://soheil.fi/developers/llms-full.txt · MCP server at `https://api.soheil.fi/v1/mcp`
@@ -16,7 +16,7 @@ Solana, Bitcoin, TON, Tron, Sui and Cosmos networks, where no contract is needed
 
 The contract is live on 25+ EVM networks, including **BNB Chain (BNB Smart Chain, BSC)**, Ethereum, Base, Arbitrum,
 OP Mainnet, Polygon, Avalanche, HyperEVM, Unichain, Linea, Sonic, Mantle, Berachain, Monad, Gnosis, Ink, World Chain,
-Scroll, Plasma, X Layer, Soneium, Celo and Zora. `getNetworks()` (or `GET https://api.soheil.fi/v1/chains`) is always the
+Scroll, Plasma, X Layer, Soneium, Celo, Zora and Cronos. `getNetworks()` (or `GET https://api.soheil.fi/v1/chains`) is always the
 current list, with the contract on each.
 
 Solana, Bitcoin, TON, Tron, Sui, Hyperliquid and Cosmos networks (Osmosis, Cosmos Hub, Noble and more) are served

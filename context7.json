@@ -1,0 +1,15 @@
+{
+  "$schema": "https://context7.com/schema/context7.json",
+  "projectTitle": "Soheil Router",
+  "description": "Swap and bridge API for wallets, apps and bots: one REST call (GET /v1/quote) returns the best price across EVM networks, Solana, Bitcoin, TON, Tron, Sui, Hyperliquid and Cosmos networks, and the one transaction that makes it. 0.1% router fee; the integrator adds their own fee (0 to 0.9%), paid in the same transaction. TypeScript SDK (@soheil-fi/router) and an MCP server.",
+  "folders": ["docs", "examples"],
+  "excludeFiles": [],
+  "rules": [
+    "Keep the secret API key (sk_…) on your server and send it in the x-api-key header; only a publishable key (pk_…) may be used in a web page.",
+    "Amounts are strings in the token's smallest unit (100 USDC is \"100000000\"); an EVM network's own coin is 0x0000000000000000000000000000000000000000.",
+    "Approve exactly fromAmount to the quote's approvalAddress (none when selling the coin), then send transactionRequest unchanged from fromAddress.",
+    "Ask for a fresh quote when validUntil has passed; set priceOnly=true for prices you only show, and quote again before the user signs.",
+    "toAmountMin is the least the recipient gets: show it next to toAmount.",
+    "Follow a sent trade with GET /v1/status until its status is DONE, FAILED, REFUNDED or NOT_OURS."
+  ]
+}
