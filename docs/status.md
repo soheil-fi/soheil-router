@@ -40,7 +40,7 @@ def wait(chain_id: int, tx_hash: str) -> dict:
 | `PENDING` | `WAITING_FILL` | A bridge transfer: mined on the source network, not paid on the destination yet (usually seconds). |
 | `PENDING` | `REFUND_PENDING` | A bridge transfer nobody filled: the refund to the sender on the source network is on its way (or waits for the sender to cancel it). |
 | `FAILED` | `BRIDGE_FAILED` | The bridge reports the transfer failed. |
-| `REFUNDED` | `REFUNDED` | A bridge transfer paid back to the sender on the source network. When the bridge says, `refund` is that payment's transaction and `reason` why: `PRICE_MOVED` (the price moved past the slippage limit before it was filled; a fresh quote usually goes through) or `NOT_FILLED`. |
+| `REFUNDED` | `REFUNDED` | A bridge transfer paid back to the sender on the source network. When the bridge says, `refund` is that payment's transaction and `reason` why: `PRICE_MOVED` (the price moved past the slippage limit before it was filled; a fresh quote usually goes through) or `NOT_FILLED`. On some routes the refund waits in the user's own refund box, a contract of ours that can pay only that user: `refundBox` is its address, and anyone may call its `release(token)` (`address(0)` for the coin) to send it all to the user. |
 | `FAILED` | `REVERTED` | Sent to our contract and reverted; the user kept their tokens. |
 | `NOT_OURS` | `null` | Mined, but not a trade through our contract. |
 | `NOT_FOUND` | `null` | The network does not know this transaction (yet). Check the hash and chainId. |

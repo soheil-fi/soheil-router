@@ -241,6 +241,11 @@ export interface Status {
   refund?: Leg | null;
   /** Why a transfer was refunded, when the bridge says: PRICE_MOVED or NOT_FILLED. */
   reason?: string | null;
+  /**
+   * Where a refund on the source network waits when it is not paid to the user directly: their own refund box, a
+   * contract that can pay only them. Anyone may call its release(token) (address(0) for the coin) to send it all.
+   */
+  refundBox?: string | null;
 }
 
 /** The API's error: code (INVALID, UNAUTHORIZED, NO_ROUTE, RATE_LIMITED…) and a message safe to show users. */
