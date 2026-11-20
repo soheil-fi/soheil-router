@@ -57,13 +57,15 @@ def wait(chain_id: int, tx_hash: str) -> dict:
   "trade": { "id": "0x9f2c…", "sender": "0xyouruser…", "recipient": "0xyouruser…",
              "fromToken": "0x8335…2913", "fromAmount": "100000000",
              "toToken": "0x0000…0000", "toAmount": "41290000000000000",
-             "routerFee": "100000", "integratorFee": "200000", "integratorAddress": "0xyourfeeaddress…" }
+             "routerFee": "100000", "integratorFee": "200000", "integratorAddress": "0xyourfeeaddress…" },
+  "received": { "token": "0x0000…0000", "amount": "41290000000000000" }
 }
 ```
 
 ## Notes
 
 -   `chainId` is the network the transaction was sent on. `sending` is that transaction; `receiving` is the one that paid the recipient: the same for a swap, a second one on `toChainId` for a bridge.
+-   Once `DONE`, `received` is what reached the recipient: `token` on the receiving network and `amount` in its smallest unit. For a swap it comes from the contract's own record; for a bridge transfer, when the bridge reports it. Otherwise it is `null`, and `receiving` still names the payout transaction.
 -   New values may appear in `status` and `substatus`: treat an unknown `status` as `PENDING`.
 -   A transaction holding more than one trade (a contract calling ours twice) shows the first.
 -   Every trade is also read from the chain on its own, so your earnings count whether or not you ask.

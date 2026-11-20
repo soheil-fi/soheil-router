@@ -246,6 +246,17 @@ export interface Status {
    * contract that can pay only them. Anyone may call its release(token) (address(0) for the coin) to send it all.
    */
   refundBox?: string | null;
+  /**
+   * Once DONE: what reached the recipient, the token on the receiving network and the amount in its smallest unit. For
+   * a swap from the contract's own record; for a bridge transfer when the bridge reports it; null otherwise.
+   */
+  received?: Received | null;
+}
+
+/** What arrived for the recipient: the token on the receiving network and the amount in its smallest unit. */
+export interface Received {
+  token: string;
+  amount: string;
 }
 
 /** The API's error: code (INVALID, UNAUTHORIZED, NO_ROUTE, RATE_LIMITED…) and a message safe to show users. */
