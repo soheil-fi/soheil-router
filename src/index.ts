@@ -71,7 +71,13 @@ export interface QuoteRequest {
   toChainId?: number;
   fromToken: string;
   toToken: string;
-  fromAmount: string | bigint;
+  /** Amount sold, in the token's smallest unit. Give this or toAmount. */
+  fromAmount?: string | bigint;
+  /**
+   * Instead of fromAmount: an exact amount to receive, for a swap on one EVM network (fromChainId = toChainId). The
+   * quote's fromAmount is then what it takes to send, and its toAmountMin is never below this amount.
+   */
+  toAmount?: string | bigint;
   /** The wallet that pays and signs. */
   fromAddress: string;
   /** Where the tokens go; defaults to fromAddress. Required when the recipient is on another kind of network. */
@@ -306,7 +312,12 @@ export class SoheilRouter {
 
   /** The best price and the transaction to sign. */
   async getQuote(req: QuoteRequest): Promise<Quote> {
-    const body = { ...req, toChainId: req.toChainId ?? req.fromChainId, fromAmount: String(req.fromAmount) };
+    const body = {
+      ...req,
+      toChainId: req.toChainId ?? req.fromChainId,
+      fromAmount: req.fromAmount === undefined ? undefined : String(req.fromAmount),
+      toAmount: req.toAmount === undefined ? undefined : String(req.toAmount),
+    };
     return this.request<Quote>("POST", "/v1/quote", body);
   }
 

@@ -10,6 +10,7 @@
     "Approve exactly fromAmount to the quote's approvalAddress (none when selling the coin), then send transactionRequest unchanged from fromAddress.",
     "Ask for a fresh quote when validUntil has passed; set priceOnly=true for prices you only show, and quote again before the user signs.",
     "toAmountMin is the least the recipient gets: show it next to toAmount.",
+    "To pay a fixed price in another token, ask with toAmount instead of fromAmount (a swap on one EVM network): the quote's fromAmount is what to send and toAmountMin is never below the price.",
     "Follow a sent trade with GET /v1/status until its status is DONE, FAILED, REFUNDED or NOT_OURS."
   ]
 }

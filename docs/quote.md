@@ -42,7 +42,8 @@ Try it with real prices, no key needed: [Try it live](https://soheil.fi/develope
 - `toChainId` (integer, required): Chain ID where the recipient receives: `fromChainId` for a swap, another of our networks to bridge there ([Bridging](https://soheil.fi/developers/docs/bridging/)), including Solana, Bitcoin, TON, Tron, Sui, Hyperliquid and Cosmos networks.
 - `fromToken` (string, required): Token sold (the coin is `0x000…0`; on networks that are not EVM see [their formats](https://soheil.fi/developers/docs/networks/#formats)).
 - `toToken` (string, required): Token bought.
-- `fromAmount` (string, required): Amount sold, in the token's smallest unit, above 0.
+- `fromAmount` (string): Amount sold, in the token's smallest unit, above 0. Required unless `toAmount` is given.
+- `toAmount` (string): Instead of `fromAmount`: an exact amount to receive, for a swap on one of the networks in `/v1/chains` (`fromChainId` = `toChainId`). The answer is an ordinary quote: its `fromAmount` is what it takes to send, and its `toAmountMin` is never below the amount you asked for (what arrives above it is the recipient's too). Use it to pay a fixed price in another token.
 - `fromAddress` (string, required): The wallet that signs and pays. From Bitcoin: the user's own Bitcoin address, which takes refunds ([Trades from Bitcoin](https://soheil.fi/developers/docs/bitcoin/)).
 - `toAddress` (string): Who receives the output, on `toChainId`; `fromAddress` by default. Never a token or our contract. Required when the two networks' addresses differ (to or from Solana, Bitcoin or TON).
 - `slippageBps` (integer): 1 to 5000; 50 (0.5%) by default. A cross-chain route whose own swaps need more room may use up to 300 (3%); `toAmountMin` always shows the least that arrives.
