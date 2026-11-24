@@ -2,7 +2,7 @@
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
   "name": "fi.soheil/router",
   "title": "Soheil Router",
-  "description": "Best-price swaps and bridges on EVM, Solana, Tron, TON, Bitcoin, Sui and Cosmos. No key needed.",
+  "description": "Best-price swaps and bridges on 100+ networks, by wallet or deposit, with token safety checks.",
   "websiteUrl": "https://soheil.fi/developers/",
   "icons": [
     {
@@ -17,7 +17,7 @@
     "url": "https://github.com/soheil-fi/soheil-router",
     "source": "github"
   },
-  "version": "1.1.0",
+  "version": "1.2.0",
   "remotes": [
     {
       "type": "streamable-http",
@@ -25,7 +25,7 @@
       "headers": [
         {
           "name": "Authorization",
-          "description": "Optional. Bearer <your API key>, free at https://soheil.fi/developers/dashboard/ : your own limits and integrator fee. Without it everything works at a low shared rate.",
+          "description": "Optional. Bearer <your API key>, free at https://soheil.fi/developers/dashboard/ : your own limits. Without it every tool works at a low shared rate, and get_quote can still pay your own fee to a feeWallet.",
           "isRequired": false,
           "isSecret": true
         }

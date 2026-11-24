@@ -1,7 +1,7 @@
 {
   "$schema": "https://context7.com/schema/context7.json",
   "projectTitle": "Soheil Router",
-  "description": "Swap and bridge API for wallets, apps and bots: one REST call (GET /v1/quote) returns the best price across EVM networks, Solana, Bitcoin, TON, Tron, Sui, Hyperliquid and Cosmos networks, and the one transaction that makes it. 0.1% router fee; the integrator adds their own fee (0 to 0.9%), paid in the same transaction. TypeScript SDK (@soheil-fi/router) and an MCP server.",
+  "description": "Swap and bridge API for wallets, apps and bots: one REST call (GET /v1/quote) returns the best price across EVM networks, Solana, Bitcoin, TON, Tron, Sui, Hyperliquid and Cosmos networks, and the one transaction that makes it. 0.1% router fee; the integrator adds their own fee (0 to 0.9%), paid in the same transaction. TypeScript SDK (@soheil-fi/router) and an MCP server (no key needed) with token search, Soheil Guard token checks and swaps paid by deposit.",
   "folders": ["docs", "examples"],
   "excludeFiles": [],
   "rules": [
