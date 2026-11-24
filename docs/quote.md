@@ -49,6 +49,7 @@ Try it with real prices, no key needed: [Try it live](https://soheil.fi/develope
 - `slippageBps` (integer): 1 to 5000; 50 (0.5%) by default. A cross-chain route whose own swaps need more room may use up to 300 (3%); `toAmountMin` always shows the least that arrives.
 - `integratorBps` (integer): Your fee for this request, 0 up to your key's ceiling; your key's default when left out. Where no contract of ours is, only networks whose integratorFee is true in GET /v1/networks take it (not yet Solana, the Cosmos networks or swaps on Tron): leave it out or send 0 there.
 - `priceOnly` (boolean): Set `true` when you only show this price and will ask again before anyone signs (a list of routes, a preview). Partners that limit quotes which are never traded are left out then, so the quote you ask for to sign can only be as good or better.
+- `alternatives` (boolean): Set `true` to also get the other good routes found for this trade, in `alternatives`: best first, each a whole quote with its own `id`, signed or paid exactly like the main one. Handy for showing your users a choice.
 
 ## Response
 
@@ -79,4 +80,5 @@ Try it with real prices, no key needed: [Try it live](https://soheil.fi/develope
 -   `fees` are taken from `fromAmount`, in `fees.token`.
 -   `gasEstimate` includes the contract's own work.
 -   A trade that starts on Solana carries `transaction` instead of `transactionRequest` ([Trades from Solana](https://soheil.fi/developers/docs/solana/)); one that starts on Bitcoin carries `deposit` ([Trades from Bitcoin](https://soheil.fi/developers/docs/bitcoin/)). Both are `null` otherwise.
+-   Asked with `alternatives=true`, the answer also carries `alternatives`: the other routes found, best first, each a whole quote like this one (its own `id`, `toAmount`, transaction or deposit). Use whichever the user picks; an empty list means the main quote was the only good one.
 -   `validUntil` (about 20 minutes ahead) is how long the price is fresh, not an on-chain deadline: send before it, or quote again. Sent later, the trade may revert (the user keeps their tokens) or fill at a worse price, never below `toAmountMin`.

@@ -94,6 +94,11 @@ export interface QuoteRequest {
    * that limit quotes which are never traded are then left out, so the quote you ask for to sign can only be as good or better.
    */
   priceOnly?: boolean;
+  /**
+   * Set true to also get the other good routes found for this trade, in the answer's alternatives: best first, each a
+   * whole quote with its own id, signed or paid exactly like the main one.
+   */
+  alternatives?: boolean;
 }
 
 export interface Fees {
@@ -205,6 +210,8 @@ export interface Quote {
   tron?: TronCall;
   /** From a Cosmos network: the transaction the wallet signs. Follow it with getStatus(chainId, { id: quote.id, txHash }). */
   cosmos?: CosmosTx;
+  /** Only when asked with alternatives: true. The other routes found, best first, each a quote of its own (empty: none). */
+  alternatives?: Quote[];
 }
 
 /** How a sent trade is named: its transaction, its quote's id, or both (see Quote). */
