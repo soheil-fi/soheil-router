@@ -9,7 +9,7 @@ Swaps on Solana, and transfers from it to other networks: the quote carries a tr
 -   Quote with `fromChainId=1151111081099710`, tokens as mints and `fromAddress` the user's Solana wallet. A swap stays on Solana and pays the wallet that signs (leave `toAddress` out); a transfer names its receiver on the other network.
 -   There is no contract of ours on Solana, and none is needed: a Solana transaction runs all its instructions or none. Our server builds one that holds the trade, our fee as a plain transfer, and a short memo naming the quote, and checks it before answering: only known programs run, and only the user signs.
 -   The user signs `transaction` as it is, within about a minute (`lastValidBlockHeight`), and it is sent to the network.
--   A transfer to another network is also asked from a second route, paid by deposit. When it pays the receiver noticeably more, the quote carries `deposit` and no `transaction`: the wallet sends exactly `deposit.amount` of the token to `deposit.address`, and the trade is followed by the quote's `id` ([as from Bitcoin](https://soheil.fi/developers/docs/bitcoin/)). A swap on Solana always carries `transaction`.
+-   A trade is also asked from a second route, paid by deposit (a swap on Solana too). When it pays the receiver noticeably more, the quote carries `deposit` and no `transaction`: the wallet sends exactly `deposit.amount` of the token to `deposit.address`, and the trade is followed by the quote's `id` ([as from Bitcoin](https://soheil.fi/developers/docs/bitcoin/)).
 
 ## The code
 

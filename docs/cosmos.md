@@ -79,8 +79,9 @@ const sent = await client.signAndBroadcast(address, messages.map(encode), "auto"
 ## Rules
 
 -   Sign every message, in order, unchanged, from `fromAddress`, before `validUntil`. A transaction that leaves one out is not this quote's: its status is `NOT_OURS`.
+-   When `cosmos.memo` is set, the transaction carries exactly that memo, and its one message is a plain send: without the memo the transfer is refunded, less network fees.
 -   `value` is a text because it holds numbers larger than JavaScript's (`timeout_timestamp`): read those as BigInt or strings.
--   The types you may get: `/ibc.applications.transfer.v1.MsgTransfer`, `/cosmwasm.wasm.v1.MsgExecuteContract` (a swap on the network itself; its `msg` is the contract's JSON, sent as bytes), `/cosmos.bank.v1beta1.MsgSend`, and Circle's CCTP burn from Noble (`/circle.cctp.v1.MsgDepositForBurn`, `…WithCaller`).
+-   The types you may get: `/ibc.applications.transfer.v1.MsgTransfer`, `/cosmwasm.wasm.v1.MsgExecuteContract` (a swap on the network itself; its `msg` is the contract's JSON, sent as bytes), `/cosmos.bank.v1beta1.MsgSend`, Circle's CCTP burn from Noble (`/circle.cctp.v1.MsgDepositForBurn`, `…WithCaller`), and on Osmosis its pool manager's swap (`/osmosis.poolmanager.v1beta1.MsgSplitRouteSwapExactAmountIn`: register Osmosis's types, e.g. from osmojs).
 -   A step that fails on the way returns the tokens to the user's own account, on the network where it stopped.
 -   No integrator fee on trades that start on a Cosmos network yet.
 

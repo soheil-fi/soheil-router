@@ -159,6 +159,11 @@ export interface TronCall {
 export interface CosmosTx {
   chainId: string;
   messages: CosmosMessage[];
+  /**
+   * When set, sign the transaction with exactly this memo (its one message is then a plain send): without it the
+   * transfer is not credited and is refunded, less network fees.
+   */
+  memo?: string;
 }
 
 /**
@@ -170,10 +175,18 @@ export interface CosmosMessage {
   value: string;
 }
 
+/** EIP-712 typed data (domain, types, primaryType, message), each signed as it is. */
+export interface HyperliquidSign {
+  /** Ties the transfer to this trade. */
+  authorize: Record<string, unknown>;
+  /** Hyperliquid's sendAsset moving exactly fromAmount of USDC from the sender's account. */
+  transfer: Record<string, unknown>;
+}
+
 /**
  * What the recipient gets, the fees, and what the sender signs. Which field carries that depends on where the trade
  * starts: transactionRequest (EVM), transaction (Solana; Sui's USDC to USDC), messages (TON), tron (Tron), cosmos (a
- * Cosmos network), or deposit (Bitcoin, Sui and the networks paid by deposit: nothing to sign, an address to pay).
+ * Cosmos network), hyperliquid (Hyperliquid: two signatures for sendHyperliquid), or deposit (Bitcoin, Sui and the networks paid by deposit: nothing to sign, an address to pay).
  */
 export interface Quote {
   id: string;
@@ -210,6 +223,12 @@ export interface Quote {
   tron?: TronCall;
   /** From a Cosmos network: the transaction the wallet signs. Follow it with getStatus(chainId, { id: quote.id, txHash }). */
   cosmos?: CosmosTx;
+  /**
+   * From Hyperliquid: two EIP-712 messages the sender's wallet signs (eth_signTypedData_v4, fromAddress), before
+   * validUntil. The wallet sends nothing itself: pass both signatures to sendHyperliquid(quote.id, ...), then follow it
+   * with getStatus(chainId, { id: quote.id }).
+   */
+  hyperliquid?: HyperliquidSign | null;
   /** Only when asked with alternatives: true. The other routes found, best first, each a quote of its own (empty: none). */
   alternatives?: Quote[];
 }
@@ -353,6 +372,15 @@ export class SoheilRouter {
   /** Sends a signed Solana transaction of a quote through the router's own connection. Sending it yourself works as well. */
   async sendSolana(chainId: number, transaction: string): Promise<{ chainId: number; txHash: string }> {
     return this.request("POST", "/v1/send", { chainId, transaction });
+  }
+
+  /**
+   * Starts a trade from Hyperliquid: the quote's id with the sender's signatures of quote.hyperliquid.authorize and
+   * quote.hyperliquid.transfer (0x… as eth_signTypedData_v4 returns them). Both are checked and handed on; txHash is
+   * the quote's id.
+   */
+  async sendHyperliquid(chainId: number, id: string, authorizeSignature: string, signature: string): Promise<{ chainId: number; txHash: string }> {
+    return this.request("POST", "/v1/send", { chainId, id, authorizeSignature, signature });
   }
 
   private async request<T>(method: string, path: string, body?: unknown): Promise<T> {

@@ -32,6 +32,7 @@ The API is also an MCP server, so an assistant or agent can call it as tools. It
 | `get_deposit_status` | Where a swap paid by deposit stands, with the transactions on both sides. |
 | `get_signing_guide` | The exact steps to sign and send a quote on the network it starts on, and how to follow it. |
 | `get_trade_status` | Where a sent trade stands, by its transaction, its quote's `id`, or both. |
+| `send_signatures` | Starts a trade from Hyperliquid: the quote's `id` and the wallet's two signatures. |
 
 Without a key:
 
