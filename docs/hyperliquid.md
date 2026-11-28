@@ -7,7 +7,7 @@ From Hyperliquid's trading account to Solana or a network in /v1/chains: the use
 ## How it works
 
 -   Quote with `fromChainId=1337`, `fromToken` USDC (`0xaf88d065e77c8cc2239327c5edb3a432268e5831`, 6 decimals) and `fromAddress` the user's Hyperliquid account (its 0x… address): refunds go there. `toAddress` defaults to the same address on an EVM network.
--   The answer carries `hyperliquid`: two EIP-712 messages for the wallet to sign. `authorize` ties the transfer to this trade; `transfer` is Hyperliquid's own transfer of exactly `fromAmount` to the bridge.
+-   The answer carries `hyperliquid`: two EIP-712 messages for the wallet to sign. `authorize` ties the transfer to this trade; `transfer` is Hyperliquid's own transfer of exactly `fromAmount` to the bridge. USDC to Arbitrum's USDC can instead come back as Hyperliquid's own withdrawal: `authorize` is then the router's fee (a `usdSend` to the router's fee wallet) and `transfer` the withdrawal of `toAmount` to the receiver (Hyperliquid's own $1 fee is the rest of `fromAmount`). Sign both as they come and send them the same way.
 -   Nothing moves until both signatures reach `POST /v1/send` with the quote's `id`: they are checked against `fromAddress` and handed on. The recipient is then paid on `toChainId`. The router's 0.1% is taken inside the order.
 
 ## Request

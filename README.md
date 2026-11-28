@@ -112,12 +112,12 @@ The request is the same everywhere; what the quote carries for the sender depend
 | --- | --- | --- |
 | An EVM network | `transactionRequest` (after approving `approvalAddress`) | `getStatus(chainId, txHash)` |
 | Solana | `transaction`: unsigned, base64; sign and send it (or `sendSolana`) | `getStatus(chainId, signature)` |
-| Bitcoin, Sui, a token on TON, and the deposit networks (XRP, Dogecoin, Zcash…) | `deposit`: an address to pay exactly `fromAmount` to, with a `memo` where needed | `getStatus(chainId, { id: quote.id })` |
+| Bitcoin, Sui, a token on TON, and the deposit networks (XRP, Dogecoin, Zcash…) | `deposit`: an address to pay exactly `fromAmount` to, with a `memo` where needed (send a deposit with a memo from your own wallet at `fromAddress`) | `getStatus(chainId, { id: quote.id })`; with a memo, add `txHash` |
 | Sui: a swap there, or USDC to USDC on an EVM network (when that route pays more) | `transaction`: a Sui transaction as JSON; `Transaction.from(quote.transaction)`, then the wallet signs and sends it | `getStatus(chainId, { id: quote.id, txHash: digest })` |
-| TON (the coin) | `messages` for TON Connect's `sendTransaction` | `getStatus(chainId, { id: quote.id })` |
+| TON: the coin, or a swap on TON | `messages` for TON Connect's `sendTransaction` (a swap: the swap and the router's fee, in one transaction) | `getStatus(chainId, { id: quote.id })` |
 | Tron | `tron`: a contract call for TronLink, after approving `approvalAddress`; `tron.fee` (when set) is sent first, and `tron.networkCost` is the TRX it will burn | `getStatus(chainId, { id: quote.id, txHash })` |
 | A Cosmos network | `cosmos`: the messages of one transaction for Keplr or Leap; the router's fee is the last one; when `cosmos.memo` is set, sign with exactly that memo | `getStatus(chainId, { id: quote.id, txHash })` |
-| Hyperliquid (USDC) | `hyperliquid`: two EIP-712 messages to sign with `eth_signTypedData_v4`; pass both signatures to `sendHyperliquid` | `getStatus(chainId, { id: quote.id })` |
+| Hyperliquid (USDC) | `hyperliquid`: two EIP-712 messages to sign with `eth_signTypedData_v4` (to Arbitrum's USDC they can be Hyperliquid's own withdrawal and the router's fee); pass both signatures to `sendHyperliquid` | `getStatus(chainId, { id: quote.id })` |
 
 ```ts
 const others = await router.getOtherNetworks();
