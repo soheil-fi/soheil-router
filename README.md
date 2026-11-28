@@ -113,7 +113,7 @@ The request is the same everywhere; what the quote carries for the sender depend
 | An EVM network | `transactionRequest` (after approving `approvalAddress`) | `getStatus(chainId, txHash)` |
 | Solana | `transaction`: unsigned, base64; sign and send it (or `sendSolana`) | `getStatus(chainId, signature)` |
 | Bitcoin, Sui, a token on TON, and the deposit networks (XRP, Dogecoin, Zcash…) | `deposit`: an address to pay exactly `fromAmount` to, with a `memo` where needed | `getStatus(chainId, { id: quote.id })` |
-| Sui, USDC to USDC on an EVM network (when that route pays more) | `transaction`: a Sui transaction as JSON; `Transaction.from(quote.transaction)`, then the wallet signs and sends it | `getStatus(chainId, { id: quote.id, txHash: digest })` |
+| Sui: a swap there, or USDC to USDC on an EVM network (when that route pays more) | `transaction`: a Sui transaction as JSON; `Transaction.from(quote.transaction)`, then the wallet signs and sends it | `getStatus(chainId, { id: quote.id, txHash: digest })` |
 | TON (the coin) | `messages` for TON Connect's `sendTransaction` | `getStatus(chainId, { id: quote.id })` |
 | Tron | `tron`: a contract call for TronLink, after approving `approvalAddress`; `tron.fee` (when set) is sent first, and `tron.networkCost` is the TRX it will burn | `getStatus(chainId, { id: quote.id, txHash })` |
 | A Cosmos network | `cosmos`: the messages of one transaction for Keplr or Leap; the router's fee is the last one; when `cosmos.memo` is set, sign with exactly that memo | `getStatus(chainId, { id: quote.id, txHash })` |

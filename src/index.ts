@@ -185,7 +185,7 @@ export interface HyperliquidSign {
 
 /**
  * What the recipient gets, the fees, and what the sender signs. Which field carries that depends on where the trade
- * starts: transactionRequest (EVM), transaction (Solana; Sui's USDC to USDC), messages (TON), tron (Tron), cosmos (a
+ * starts: transactionRequest (EVM), transaction (Solana; Sui: a swap there, or USDC to USDC), messages (TON), tron (Tron), cosmos (a
  * Cosmos network), hyperliquid (Hyperliquid: two signatures for sendHyperliquid), or deposit (Bitcoin, Sui and the networks paid by deposit: nothing to sign, an address to pay).
  */
 export interface Quote {
@@ -209,8 +209,8 @@ export interface Quote {
   validUntil: number;
   estimatedDurationSeconds: number;
   /**
-   * From Solana: the unsigned transaction, base64, good until the chain passes lastValidBlockHeight. From Sui (USDC to
-   * USDC): the transaction as JSON for Transaction.from in Sui's SDK; the wallet adds the gas, signs and sends it. Follow
+   * From Solana: the unsigned transaction, base64, good until the chain passes lastValidBlockHeight. From Sui (a swap
+   * there, or USDC to USDC): the transaction as JSON for Transaction.from in Sui's SDK; the wallet adds the gas, signs and sends it. Follow
    * it with getStatus(chainId, { id: quote.id, txHash: digest }).
    */
   transaction?: string | null;
